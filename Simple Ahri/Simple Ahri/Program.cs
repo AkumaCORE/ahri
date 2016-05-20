@@ -56,6 +56,7 @@ namespace SimpleAhri
             GameObject.OnCreate += GameObject_OnCreate;
             GameObject.OnDelete += GameObject_OnDelete;
             HPBarIndicator.Initalize();
+            Obj_AI_Base.OnBasicAttack += Obj_AI_Base_OnBasicAttack;
 
             if (Config.Drawings.DrawPermashow)
             {
@@ -79,6 +80,20 @@ namespace SimpleAhri
             Rabadon = new Item(3089);
 
             Helpers.PrintInfoMessage("Addon loaded !");
+        }
+        private static void Obj_AI_Base_OnBasicAttack(Obj_AI_Base Sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (Sender == null || Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Flee))
+            {
+               return;
+            }
+            var predq = Q.GetPrediction(Sender);
+            if (Sender.IsValidTarget(Q.Range) && Q.IsReady() && !Sender.IsAlly && !Sender.IsMe && !Sender.IsMinion && !Sender.IsMonster)
+            {
+                {
+                    Q.Cast(Sender.ServerPosition);
+                }
+            } 
         }
 
         private static void Drawing_OnEndScene(EventArgs args)
