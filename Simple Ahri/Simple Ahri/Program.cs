@@ -18,6 +18,7 @@ namespace SimpleAhri
         public const string ChampName = "Ahri";
 
         public static AIHeroClient CurrentTarget;
+        public static Spell.Skillshot Q { get; private set; }
 
         public static readonly List<ProcessSpellCastCache> CachedAntiGapclosers = new List<ProcessSpellCastCache>();
         public static readonly List<ProcessSpellCastCache> CachedInterruptibleSpells = new List<ProcessSpellCastCache>();
@@ -44,6 +45,8 @@ namespace SimpleAhri
             {
                 return;
             }
+            Q = new Spell.Skillshot(SpellSlot.Q, 900, SkillShotType.Linear, 250, 1500, 125);
+            Q.AllowedCollisionCount = int.MaxValue;
 
             Config.Initialize();
             SpellManager.Initialize();
@@ -89,7 +92,7 @@ namespace SimpleAhri
                return;
             }
             var predq = Q.GetPrediction(Sender);
-            if (Sender.IsValidTarget(900) && Q.IsReady() && !Sender.IsAlly && !Sender.IsMe && !Sender.IsMinion && !Sender.IsMonster)
+            if (Sender.IsValidTarget(Q.Range) && Q.IsReady() && !Sender.IsAlly && !Sender.IsMe && !Sender.IsMinion && !Sender.IsMonster)
             {
                 {
                     Q.Cast(Sender.ServerPosition);
